@@ -1,7 +1,8 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
-import GoogleSignInButton from "@/components/signin/GoogleSignInButton";
+import GoogleSignInButton from "./GoogleSignInButton";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
+import GoogleSignInError from "./GoogleSignInError";
 
 export default async function SignIn() {
   const session = await getServerSession(authOptions);
@@ -28,6 +29,7 @@ export default async function SignIn() {
             </span>
           </div>
           <GoogleSignInButton />
+          <GoogleSignInError />
         </div>
       )}
     </div>

@@ -12,6 +12,7 @@ export const authOptions: NextAuthOptions = {
   ],
   pages: {
     signIn: "/signin",
+    error: "/authError",
   },
   session: {
     strategy: "jwt",
@@ -26,6 +27,7 @@ export const authOptions: NextAuthOptions = {
               `${process.env.STRAPI_BACKEND_URL}/api/auth/${account.provider}/callback?access_token=${account.access_token}`,
               { cache: "no-cache" },
             );
+
             if (!strapiResponse.ok) {
               const strapiError: StrapiErrorT = await strapiResponse.json();
               throw new Error(strapiError.error.message);
@@ -51,6 +53,17 @@ export const authOptions: NextAuthOptions = {
       session.user.blocked = token.blocked;
 
       return session;
+    },
+    async signIn({ user, account, profile, email, credentials }) {
+      if (
+        account &&
+        account.provider === "google" &&
+        profile &&
+        "email_verified" in profile
+      ) {
+        if (!profile.email_verified) return false;
+      }
+      return true;
     },
   },
 };
