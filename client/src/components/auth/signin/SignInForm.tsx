@@ -4,6 +4,7 @@ import { signIn } from "next-auth/react";
 import React, { useState } from "react";
 import { z } from "zod";
 import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 type FormErrorsT = {
   identifier?: undefined | string[];
@@ -24,6 +25,18 @@ const formSchema = z.object({
     .max(30),
 });
 
+function ConfirmationError() {
+  return (
+    <p>
+      It looks like you haven't confirmed your email yet. Check your email
+      client for a confirmation email. Did not find it?
+      <Link href="/confirmation/newrequest" className="underline">
+        Resend the confirmation email.
+      </Link>
+    </p>
+  );
+}
+
 export default function SignInForm() {
   const [data, setData] = useState(initialState);
   const [errors, setErrors] = useState<FormErrorsT>();
@@ -32,6 +45,9 @@ export default function SignInForm() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
   const router = useRouter();
+
+  const hasConfirmationError =
+    errors?.strapiError === "Your account email is not confirmed";
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setData({
@@ -45,6 +61,7 @@ export default function SignInForm() {
     setLoading(true);
 
     const validatedFields = formSchema.safeParse(data);
+
     if (!validatedFields.success) {
       setErrors(validatedFields.error.formErrors.fieldErrors);
       setLoading(false);
@@ -122,7 +139,12 @@ export default function SignInForm() {
           Something went wrong. Please check your data.
         </div>
       ) : null}
-      {errors?.strapiError ? (
+      {hasConfirmationError ? (
+        <div className="text-red-700" aria-live="polite">
+          <ConfirmationError />
+        </div>
+      ) : null}
+      {!hasConfirmationError && errors?.strapiError ? (
         <div className="text-red-700" aria-live="polite">
           Something went wrong: {errors.strapiError}
         </div>
