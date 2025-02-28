@@ -28,7 +28,7 @@ const formSchema = z.object({
 function ConfirmationError() {
   return (
     <p>
-      It looks like you haven't confirmed your email yet. Check your email
+      It looks like you {"haven't"} confirmed your email yet. Check your email
       client for a confirmation email. Did not find it?
       <Link href="/confirmation/newrequest" className="underline">
         Resend the confirmation email.
@@ -133,6 +133,9 @@ export default function SignInForm() {
           className="bg-blue-400 px-4 py-2 rounded-md disabled:bg-sky-200 disabled:text-gray-500">
           sign in
         </button>
+        <Link href="/password/requestreset" className="underline ml-3">
+          Forgot password?
+        </Link>
       </div>
       {errors?.password || errors?.identifier ? (
         <div className="text-red-700" aria-live="polite">
