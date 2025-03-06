@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Link from "next/link";
 
 type Props = {
@@ -57,7 +58,7 @@ const ConfirmationSubmit = async ({ confirmationToken }: Props) => {
       <h2 className="font-bold text-lg mb-4">Email confirmed.</h2>
       <p>
         Your email was successfully verified. You can now
-        <Link href="/login" className="underline">
+        <Link href="/signin" className="underline">
           login
         </Link>
         .
